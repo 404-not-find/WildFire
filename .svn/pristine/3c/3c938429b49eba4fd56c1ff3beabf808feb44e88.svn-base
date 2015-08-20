@@ -1,0 +1,15 @@
+package com.hiynn.wildfire.knowledgebase.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping(value="/knowledgebase")
+public class OntologyController {
+
+	
+	@RequestMapping(value="/main")
+	public String createEntity(){
+		return "index";
+	}
+}

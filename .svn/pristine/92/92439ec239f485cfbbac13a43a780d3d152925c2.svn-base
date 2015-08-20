@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:neo4j="http://www.springframework.org/schema/data/neo4j"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/data/neo4j
+        http://www.springframework.org/schema/data/neo4j/spring-neo4j.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<mvc:annotation-driven enable-matrix-variables="true" />
+
+	<context:spring-configured />
+	<context:annotation-config />
+	<context:component-scan base-package="com.hiynn.wildfire.knowledgebase" />
+
+	<mvc:resources mapping="/knowledgebase/**" location="/WEB-INF/knowledgebase/" />
+	<mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
+	<mvc:resources mapping="/css/**" location="/WEB-INF/css/" />
+	<mvc:resources mapping="/image/**" location="/WEB-INF/image/" />
+	
+	<neo4j:config graphDatabaseService="graphDatabaseService"
+		base-package="com.hiynn.wildfire.knowledgebase" />
+	<bean id="graphDatabaseService"
+		class="org.springframework.data.neo4j.rest.SpringCypherRestGraphDatabase">
+		<constructor-arg index="0"
+			value="http://192.168.0.8:7474/db/data" />
+	</bean>
+	<neo4j:repositories base-package="com.hiynn.wildfire.knowledgebase.dao" />
+
+	<tx:annotation-driven />
+	<!-- View resolver that delegates to other view resolvers based on the content 
+		type -->
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<!-- All configuration is now done by the manager - since Spring V3.2 -->
+		<property name="contentNegotiationManager" ref="cnManager" />
+		<!-- 在没有扩展名时即: "/user/1" 时的默认展现形式 -->  
+     
+		<property name="viewResolvers">
+			<list>
+				<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+				<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="prefix" value="" />
+					<property name="suffix" value=".html" />
+				</bean>
+			</list>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean
+					class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="4096" />
+	</bean>
+	<!-- Setup a simple strategy: 1. Only path extension is taken into account, 
+		Accept headers are ignored. 2. Return HTML by default when not sure. -->
+	<bean id="cnManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="ignoreAcceptHeader" value="true" />
+		<property name="defaultContentType" value="text/html" />
+		<property name="mediaTypes">
+			<map>
+				<entry key="json" value="application/json" />
+			</map>
+		</property>
+		<property name="favorParameter" value="false" />
+
+	</bean>
+</beans>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>知识库系统</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+<link rel="stylesheet" href="../css/angular-ui-tree.min.css">
+<link rel="stylesheet" href="../css/tree.css">
+<link rel="stylesheet" href="../css/main.css">
+
+    
+</head>
+<body ng-app="knowledgeApp">
+<!-- 导航条 -->
+<div ng-include="'navbar-top.html'"></div>
+<!-- ng routes hook -->
+<div ng-view></div>
+
+
+	<!--[if IE 8]>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.min.js"></script>
+  <![endif]-->
+	<script src="../js/angular.min.js"></script>
+	<script type="text/javascript" src="../js/main.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/angular-route.min.js"></script>
+	<script
+		src="../js/ui-bootstrap-tpls.min.js"></script>
+	<script src="../js/app.js"></script>
+</body>
+</html>
